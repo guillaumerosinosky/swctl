@@ -50,6 +50,8 @@ type CreateInstance struct {
 	Replicas int32
 	// Registry is the docker registry of the microservices images
 	Registry string
+	// Repository is the docker repository of the microservices images
+	Repository string
 	// Docker image tag
 	Tag string
 	// Use debug mode
@@ -98,6 +100,7 @@ func NewCreateInstance(cfg *action.Configuration) *CreateInstance {
 		Replicas:              1,
 		Tag:                   dockerImageDefaultTag,
 		Registry:              sitewhereiov1alpha4.DefaultDockerSpec.Registry,
+		Repository:            sitewhereiov1alpha4.DefaultDockerSpec.Repository,
 		Debug:                 false,
 		ConfigurationTemplate: defaultConfigurationTemplate,
 		DatasetTemplate:       defaultDatasetTemplate,
@@ -182,7 +185,7 @@ func (i *CreateInstance) buildCRSiteWhereInstace(profile profile.SiteWhereProfil
 		Replicas:     i.Replicas,
 		Tag:          i.Tag,
 		Registry:     i.Registry,
-		Repository:   "sitewhere",
+		Repository:   i.Repository,
 	}
 	conf, err := config.LoadConfigurationOrDefault(placeHolder, profile)
 	if err != nil {
@@ -201,7 +204,7 @@ func (i *CreateInstance) buildCRSiteWhereInstace(profile profile.SiteWhereProfil
 			DatasetTemplate:       i.DatasetTemplate,
 			DockerSpec: &sitewhereiov1alpha4.DockerSpec{
 				Registry:   i.Registry,
-				Repository: sitewhereiov1alpha4.DefaultDockerSpec.Repository,
+				Repository: i.Repository,
 				Tag:        i.Tag,
 			},
 			Microservices: conf.Microservices,
